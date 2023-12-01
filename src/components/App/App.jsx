@@ -7,14 +7,14 @@ import { ContactList } from 'components/ContactList/ContactList';
 import { Filter } from 'components/Filter/Filter';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 
+import {
+  getContactsFromLocalStorage,
+  setContactsToLocalStorage,
+} from 'helpers';
+
 export class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
 
@@ -41,6 +41,17 @@ export class App extends Component {
           contacts: [...this.state.contacts, data],
         });
   };
+
+  componentDidMount() {
+    const localStorageContacts = getContactsFromLocalStorage();
+    this.setState({ contacts: localStorageContacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts.length !== prevState.contacts.length) {
+      setContactsToLocalStorage(this.state.contacts);
+    }
+  }
 
   render() {
     const { filter, contacts } = this.state;
