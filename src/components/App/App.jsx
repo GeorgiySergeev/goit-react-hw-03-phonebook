@@ -18,6 +18,17 @@ export class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const localStorageContacts = getContactsFromLocalStorage();
+    this.setState({ contacts: localStorageContacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts.length !== prevState.contacts.length) {
+      setContactsToLocalStorage(this.state.contacts);
+    }
+  }
+
   deliteContact = id => {
     this.setState(prev => ({
       contacts: prev.contacts.filter(item => item.id !== id),
@@ -41,17 +52,6 @@ export class App extends Component {
           contacts: [...this.state.contacts, data],
         });
   };
-
-  componentDidMount() {
-    const localStorageContacts = getContactsFromLocalStorage();
-    this.setState({ contacts: localStorageContacts });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts.length !== prevState.contacts.length) {
-      setContactsToLocalStorage(this.state.contacts);
-    }
-  }
 
   render() {
     const { filter, contacts } = this.state;
